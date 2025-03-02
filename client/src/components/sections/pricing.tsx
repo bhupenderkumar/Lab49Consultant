@@ -4,15 +4,45 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { Check } from "lucide-react";
 import type { SubscriptionPlan } from "@shared/schema";
+import { useSubscription } from "@/hooks/use-subscription";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export function Pricing() {
+  const [email, setEmail] = useState("");
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
   const { data: plans, isLoading } = useQuery<SubscriptionPlan[]>({
     queryKey: ["/api/plans"]
   });
 
+  const { currentSubscription, subscribe, isSubscribing, userEmail } = useSubscription();
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const handleSubscribe = (planId: number) => {
+    if (!email) return;
+    subscribe({ email, planId });
+    setSelectedPlanId(null);
+  };
+
+  const getButtonProps = (planId: number) => {
+    const isCurrentPlan = currentSubscription?.planId === planId;
+
+    return {
+      onClick: isCurrentPlan ? undefined : () => setSelectedPlanId(planId),
+      disabled: isSubscribing || (isCurrentPlan && !userEmail),
+      children: isCurrentPlan ? "Current Plan" : "Subscribe",
+    };
+  };
 
   return (
     <section id="pricing" className="py-20">
@@ -50,9 +80,32 @@ export function Pricing() {
                       </li>
                     ))}
                   </ul>
-                  <Button className="w-full mt-6" asChild>
-                    <a href="#contact">Get Started</a>
-                  </Button>
+
+                  <Dialog open={selectedPlanId === plan.id} onOpenChange={(open) => !open && setSelectedPlanId(null)}>
+                    <DialogTrigger asChild>
+                      <Button className="w-full mt-6" {...getButtonProps(plan.id)} />
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Subscribe to {plan.name} Plan</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 pt-4">
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <Button 
+                          className="w-full" 
+                          onClick={() => handleSubscribe(plan.id)}
+                          disabled={!email || isSubscribing}
+                        >
+                          {isSubscribing ? "Subscribing..." : "Confirm Subscription"}
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </CardContent>
               </Card>
             </motion.div>

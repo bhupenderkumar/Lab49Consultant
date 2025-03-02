@@ -19,6 +19,13 @@ export const subscribers = pgTable("subscribers", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const userSubscriptions = pgTable("user_subscriptions", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  planId: integer("plan_id").references(() => subscriptionPlans.id).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertSubscriberSchema = createInsertSchema(subscribers).omit({
   id: true,
   createdAt: true,
@@ -28,6 +35,12 @@ export const insertSubscriberSchema = createInsertSchema(subscribers).omit({
   company: z.string().min(2, "Company name must be at least 2 characters"),
 });
 
+export const subscribeSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  planId: z.number(),
+});
+
 export type InsertSubscriber = z.infer<typeof insertSubscriberSchema>;
 export type Subscriber = typeof subscribers.$inferSelect;
 export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
+export type UserSubscription = typeof userSubscriptions.$inferSelect;
