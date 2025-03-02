@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useSubscription } from "@/hooks/use-subscription";
 
 const NavItem = ({ href, children }: { href: string, children: React.ReactNode }) => {
   const isMobile = useIsMobile();
@@ -28,12 +29,19 @@ const NavItem = ({ href, children }: { href: string, children: React.ReactNode }
 export function Navbar() {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const { currentSubscription } = useSubscription();
 
   const navItems = (
     <>
-      <NavItem href="#services">Services</NavItem>
-      <NavItem href="#pricing">Pricing</NavItem>
-      <NavItem href="#contact">Contact</NavItem>
+      <NavItem href="#services">
+        {currentSubscription ? "Get Started" : "Services"}
+      </NavItem>
+      <NavItem href="#pricing">
+        {currentSubscription ? "Upgrade Plan" : "Pricing"}
+      </NavItem>
+      <NavItem href="#contact">
+        {currentSubscription ? "Support" : "Contact"}
+      </NavItem>
     </>
   );
 
