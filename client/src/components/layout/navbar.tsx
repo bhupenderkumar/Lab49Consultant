@@ -45,15 +45,9 @@ export function Navbar() {
 
   const navItems = (
     <>
-      <NavItem href="#services">
-        {currentSubscription ? "Get Started" : "Services"}
-      </NavItem>
-      <NavItem href="#pricing">
-        {currentSubscription ? "Upgrade Plan" : "Pricing"}
-      </NavItem>
-      <NavItem href="#contact">
-        {currentSubscription ? "Support" : "Contact"}
-      </NavItem>
+      <NavItem href="#services">Services</NavItem>
+      <NavItem href="#pricing">Pricing</NavItem>
+      <NavItem href="#contact">Contact</NavItem>
       {user ? (
         <>
           <span className="text-muted-foreground">Welcome, {user.name}</span>
