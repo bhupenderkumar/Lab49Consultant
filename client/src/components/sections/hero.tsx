@@ -14,15 +14,15 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent mb-6">
               Transform Your Business with AI
             </h1>
-            <p className="text-xl text-muted-foreground mb-4">
+            <p className="text-xl text-white/90 mb-4">
               Lab49's AI consulting services help financial institutions leverage artificial intelligence 
               to drive innovation and growth. Our expert team combines deep industry knowledge with 
               cutting-edge AI expertise to deliver transformative solutions.
             </p>
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-lg text-white/80 mb-8">
               From machine learning models to natural language processing, we help you harness the 
               power of AI to optimize operations, enhance customer experiences, and gain competitive advantage.
             </p>

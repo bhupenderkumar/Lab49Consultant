@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSubscription } from "@/hooks/use-subscription";
+import { useAuth } from "@/hooks/use-auth";
 
 const NavItem = ({ href, children }: { href: string, children: React.ReactNode }) => {
   const isMobile = useIsMobile();
@@ -30,6 +31,17 @@ export function Navbar() {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
   const { currentSubscription } = useSubscription();
+  const { user, logoutMutation } = useAuth();
+  const [, setLocation] = useLocation();
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+    setLocation('/auth');
+  };
+
+  const handleLogin = () => {
+    setLocation('/auth');
+  };
 
   const navItems = (
     <>
@@ -42,6 +54,20 @@ export function Navbar() {
       <NavItem href="#contact">
         {currentSubscription ? "Support" : "Contact"}
       </NavItem>
+      {user ? (
+        <>
+          <span className="text-muted-foreground">Welcome, {user.name}</span>
+          <Button 
+            variant="outline" 
+            onClick={handleLogout}
+            disabled={logoutMutation.isPending}
+          >
+            {logoutMutation.isPending ? "Logging out..." : "Logout"}
+          </Button>
+        </>
+      ) : (
+        <Button onClick={handleLogin}>Login</Button>
+      )}
     </>
   );
 
