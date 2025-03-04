@@ -100,6 +100,8 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
+                    <p>Please enter your registered email and password to log in.</p>
+                    <p>Note: Ensure that your credentials are correct.</p>
                     <Button 
                       type="submit" 
                       className="w-full"

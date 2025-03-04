@@ -1,12 +1,16 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cors from "cors";
 
 const app = express();
 
 // API middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Ensure CORS is set up correctly
+app.use(cors());
 
 // API routes should be prefixed with /api
 app.use('/api', (req, res, next) => {
@@ -63,7 +67,7 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  const port = 5000;
+  const port = 5001;
   server.listen({
     port,
     host: "0.0.0.0",
