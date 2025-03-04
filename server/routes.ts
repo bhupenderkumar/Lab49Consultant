@@ -3,6 +3,9 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertSubscriberSchema, subscribeSchema, insertUserSchema, loginSchema } from "@shared/schema";
 
+// Simple session store for demo
+const sessions = new Map<string, number>();
+
 export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/plans", async (_req, res) => {
     const plans = await storage.getSubscriptionPlans();
@@ -44,6 +47,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     const user = await storage.createUser(result.data);
     const { password, ...userWithoutPassword } = user;
+
+    // Set session
+    sessions.set(req.ip, user.id);
+
     res.status(201).json(userWithoutPassword);
   });
 
@@ -59,16 +66,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     const { password, ...userWithoutPassword } = user;
+
+    // Set session
+    sessions.set(req.ip, user.id);
+
     res.json(userWithoutPassword);
   });
 
-  app.post("/api/auth/logout", (_req, res) => {
+  app.post("/api/auth/logout", (req, res) => {
+    sessions.delete(req.ip);
     res.json({ success: true });
   });
 
-  app.get("/api/user", (_req, res) => {
-    // For demo purposes, return null to indicate no authenticated user
-    res.json(null);
+  app.get("/api/user", async (req, res) => {
+    const userId = sessions.get(req.ip);
+    if (!userId) {
+      return res.json(null);
+    }
+
+    const user = await storage.getUserById(userId);
+    if (!user) {
+      return res.json(null);
+    }
+
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
   });
 
   const httpServer = createServer(app);

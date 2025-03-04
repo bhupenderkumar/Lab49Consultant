@@ -19,6 +19,7 @@ export interface IStorage {
   createUserSubscription(email: string, planId: number): Promise<UserSubscription>;
   createUser(user: InsertUser): Promise<User>;
   getUserByEmail(email: string): Promise<User | null>;
+  getUserById(id: number): Promise<User | null>;
   validateUser(email: string, password: string): Promise<User | null>;
 }
 
@@ -106,6 +107,10 @@ export class MemStorage implements IStorage {
   async getUserByEmail(email: string): Promise<User | null> {
     const user = Array.from(this.users.values()).find(u => u.email === email);
     return user || null;
+  }
+
+  async getUserById(id: number): Promise<User | null> {
+    return this.users.get(id) || null;
   }
 
   async validateUser(email: string, password: string): Promise<User | null> {
