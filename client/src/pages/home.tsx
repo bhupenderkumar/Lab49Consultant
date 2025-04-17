@@ -6,14 +6,14 @@ import { Contact } from "@/components/sections/contact";
 import { DemoFeatures } from "@/components/sections/demo-features";
 import { useAuth } from "@/hooks/use-auth";
 import FeaturesAndPricing from "@/components/FeaturesAndPricing";
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 
 export default function Home() {
   const { user } = useAuth();
-  const router = useRouter();
+  // const router = useRouter();
 
   const handlePricingClick = () => {
-    router.push('/pricing');
+    // router.push('/pricing');
   };
 
   return (
