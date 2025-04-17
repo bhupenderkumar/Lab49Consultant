@@ -7,7 +7,7 @@ import Home from "@/pages/home";
 import AuthPage from "@/pages/auth";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
-
+import { Analytics } from "@vercel/analytics/react"
 function Router() {
   return (
     <Switch>

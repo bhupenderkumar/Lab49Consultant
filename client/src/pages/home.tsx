@@ -6,9 +6,15 @@ import { Contact } from "@/components/sections/contact";
 import { DemoFeatures } from "@/components/sections/demo-features";
 import { useAuth } from "@/hooks/use-auth";
 import FeaturesAndPricing from "@/components/FeaturesAndPricing";
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const { user } = useAuth();
+  const router = useRouter();
+
+  const handlePricingClick = () => {
+    router.push('/pricing');
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -22,7 +28,7 @@ export default function Home() {
             <p>If you have any questions, feel free to reach out!</p>
           </div>
         )}
-        <FeaturesAndPricing />
+        <FeaturesAndPricing onPricingClick={handlePricingClick} />
         <Pricing />
         <DemoFeatures />
         <Contact />
